@@ -48,7 +48,7 @@ const starPositions = [
 
 export function StarField() {
   return (
-    <div className="pointer-events-none fixed inset-0 z-0">
+    <div aria-hidden="true" className="pointer-events-none fixed inset-0 z-0">
       {starPositions.map((star, i) => (
         <div
           key={i}

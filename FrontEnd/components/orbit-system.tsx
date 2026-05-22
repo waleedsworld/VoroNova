@@ -8,7 +8,7 @@ export function OrbitSystem() {
   const canvasRef = useRef<HTMLDivElement>(null)
 
   return (
-    <div ref={canvasRef} className="relative h-[400px] sm:h-[500px] md:h-[600px] w-full">
+    <div ref={canvasRef} aria-hidden="true" className="relative h-[400px] sm:h-[500px] md:h-[600px] w-full">
       {/* Central planet */}
       <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2">
         <div className="pulse-glow relative h-32 w-32 sm:h-40 sm:w-40 md:h-48 md:w-48 rounded-full bg-gradient-to-br from-primary via-orange-600 to-red-600 shadow-2xl shadow-primary/50">
