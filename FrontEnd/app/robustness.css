@@ -1,0 +1,108 @@
+/* ------------------------------------------------------------------
+   Robustness layer — mobile, tablet & touch hardening.
+   Additive only; loaded after globals.css. Nothing here changes the
+   desktop look — every rule is gated on touch/coarse-pointer, small
+   viewports, or device safe-areas.
+   ------------------------------------------------------------------ */
+
+/* Never let a stray wide child force horizontal page scroll on phones.
+   Individual scroll regions still opt back in with their own overflow-x. */
+html,
+body {
+  max-width: 100%;
+  overflow-x: hidden;
+}
+
+/* Stop iOS from silently bumping font sizes on orientation change,
+   which breaks carefully-tuned mobile layouts. */
+html {
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+}
+
+/* Kill the 300ms tap delay and the grey flash on tap for all controls. */
+a,
+button,
+[role="button"],
+input,
+label,
+summary,
+.cursor-pointer {
+  -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
+}
+
+/* Prevent scroll chaining so pulling past the end of a chat/scroll pane
+   doesn't drag the whole page (and doesn't trigger pull-to-refresh). */
+.overflow-y-auto,
+.overflow-auto,
+.overflow-x-auto {
+  overscroll-behavior: contain;
+}
+
+/* Comfortable, accessible touch targets on touch/coarse-pointer devices.
+   Fine-pointer (mouse) users keep the original compact sizing. WCAG 2.5.5
+   recommends ~44px; we enforce it without disturbing the visual box by
+   using min dimensions on interactive elements that render too small. */
+@media (pointer: coarse) {
+  button,
+  a[role="button"],
+  [role="button"],
+  a.inline-flex,
+  label[role="button"] {
+    min-height: 44px;
+  }
+
+  /* Square icon-only buttons (Tailwind size-9 / h-9 w-9 = 36px, size="icon")
+     grow to a full 44px tap area in both axes. */
+  button.h-9.w-9,
+  button.size-9,
+  button[class*="size-icon"],
+  .h-8.w-8[role="button"] {
+    min-width: 44px;
+    min-height: 44px;
+  }
+
+  /* Text inputs / selects are easier to hit and stop iOS auto-zoom
+     (any font-size < 16px triggers a zoom-on-focus). */
+  input:not([type="checkbox"]):not([type="radio"]),
+  select,
+  textarea {
+    min-height: 44px;
+    font-size: max(16px, 1em);
+  }
+
+  /* Small utility buttons (h-8 / size="sm") still comfortably tappable. */
+  button.h-8,
+  a.h-8 {
+    min-height: 40px;
+  }
+}
+
+/* Respect display notches / rounded corners / home indicators.
+   Fixed top nav and any fixed bottom bar inset themselves. */
+@supports (padding: max(0px)) {
+  nav.fixed,
+  header.fixed {
+    padding-left: max(0px, env(safe-area-inset-left));
+    padding-right: max(0px, env(safe-area-inset-right));
+  }
+
+  .fixed.bottom-0 {
+    padding-bottom: max(0px, env(safe-area-inset-bottom));
+  }
+}
+
+/* Long unbroken strings (URLs, IDs, prompt text) must wrap instead of
+   pushing a bubble past the viewport edge on narrow screens. */
+@media (max-width: 640px) {
+  p,
+  span,
+  li,
+  h1,
+  h2,
+  h3,
+  .break-anywhere {
+    overflow-wrap: anywhere;
+  }
+}

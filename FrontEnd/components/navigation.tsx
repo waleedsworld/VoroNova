@@ -5,6 +5,7 @@ import Link from "next/link"
 import { Button } from "@/components/ui/button"
 import { useState } from "react"
 import { Menu, X } from "lucide-react"
+import { useMobileMenu } from "@/lib/use-mobile-menu"
 
 export function Navigation() {
   const [isMenuOpen, setIsMenuOpen] = useState(false)
@@ -13,12 +14,15 @@ export function Navigation() {
     setIsMenuOpen(!isMenuOpen)
   }
 
+  // Lock background scroll and close on Escape while the mobile menu is open.
+  useMobileMenu(isMenuOpen, () => setIsMenuOpen(false))
+
   return (
     <>
-      <nav className="fixed top-0 left-0 right-0 z-50 border-b border-border/50 bg-background/80 backdrop-blur-lg">
+      <nav aria-label="Primary" className="fixed top-0 left-0 right-0 z-50 border-b border-border/50 bg-background/80 backdrop-blur-lg">
         <div className="container mx-auto flex items-center justify-between px-4 sm:px-6 py-4">
-          <Link href="/" className="flex items-center gap-2">
-            <Image src="/logo.png" alt="Voronova" width={40} height={40} className="h-8 w-8 sm:h-10 sm:w-10" />
+          <Link href="/" aria-label="VoroNova home" className="flex items-center gap-2">
+            <Image src="/logo.png" alt="" aria-hidden="true" width={40} height={40} className="h-8 w-8 sm:h-10 sm:w-10" />
             <span className="text-lg sm:text-xl font-bold tracking-tight text-foreground">VORONOVA</span>
           </Link>
 
@@ -66,22 +70,25 @@ export function Navigation() {
             size="icon"
             className="lg:hidden text-foreground hover:bg-primary/10"
             onClick={toggleMenu}
+            aria-label={isMenuOpen ? "Close menu" : "Open menu"}
+            aria-expanded={isMenuOpen}
+            aria-controls="mobile-menu"
           >
-            {isMenuOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
+            {isMenuOpen ? <X className="h-6 w-6" aria-hidden="true" /> : <Menu className="h-6 w-6" aria-hidden="true" />}
           </Button>
         </div>
       </nav>
 
       {/* Mobile Menu Overlay */}
       {isMenuOpen && (
-        <div className="fixed inset-0 z-40 lg:hidden">
-          <div className="fixed inset-0 bg-background/80 backdrop-blur-lg" onClick={toggleMenu} />
+        <div id="mobile-menu" role="dialog" aria-modal="true" aria-label="Site menu" className="fixed inset-0 z-40 lg:hidden">
+          <div className="fixed inset-0 bg-background/80 backdrop-blur-lg" aria-hidden="true" onClick={toggleMenu} />
           <div className="fixed top-0 right-0 h-full w-80 bg-gradient-to-b from-primary/95 to-primary/90 backdrop-blur-lg shadow-2xl">
             <div className="flex flex-col h-full">
               {/* Mobile Menu Header */}
               <div className="flex items-center justify-between p-6 border-b border-primary-foreground/20">
                 <div className="flex items-center gap-2">
-                  <Image src="/logo.png" alt="Voronova" width={32} height={32} className="h-8 w-8" />
+                  <Image src="/logo.png" alt="" aria-hidden="true" width={32} height={32} className="h-8 w-8" />
                   <span className="text-lg font-bold text-primary-foreground">VORONOVA</span>
                 </div>
                 <Button
@@ -89,8 +96,9 @@ export function Navigation() {
                   size="icon"
                   className="text-primary-foreground hover:bg-primary-foreground/20"
                   onClick={toggleMenu}
+                  aria-label="Close menu"
                 >
-                  <X className="h-6 w-6" />
+                  <X className="h-6 w-6" aria-hidden="true" />
                 </Button>
               </div>
 
