@@ -33,8 +33,8 @@ export default function ResultsPage() {
         <div className="flex items-center justify-between">
           {/* Left side - Logo */}
           <div className="flex items-center">
-            <Link href="/" className="flex items-center gap-2">
-              <Image src="/logo.png" alt="Voronova" width={40} height={40} className="h-8 w-8 sm:h-10 sm:w-10" />
+            <Link href="/" aria-label="VoroNova home" className="flex items-center gap-2">
+              <Image src="/logo.png" alt="" aria-hidden="true" width={40} height={40} className="h-8 w-8 sm:h-10 sm:w-10" />
             </Link>
           </div>
 
@@ -46,8 +46,11 @@ export default function ResultsPage() {
               size="icon"
               className="text-foreground hover:bg-primary/10"
               onClick={toggleMenu}
+              aria-label={isMenuOpen ? "Close menu" : "Open menu"}
+              aria-expanded={isMenuOpen}
+              aria-controls="results-menu"
             >
-              <Menu className="h-6 w-6" />
+              <Menu className="h-6 w-6" aria-hidden="true" />
             </Button>
             
             {/* Analyze Design Button */}
@@ -62,9 +65,9 @@ export default function ResultsPage() {
 
       {/* Right Sidebar Menu */}
       {isMenuOpen && (
-        <div className="fixed inset-0 z-40">
+        <div id="results-menu" role="dialog" aria-modal="true" aria-label="Site menu" className="fixed inset-0 z-40">
           {/* Backdrop */}
-          <div className="fixed inset-0 bg-background/80 backdrop-blur-lg" onClick={toggleMenu} />
+          <div className="fixed inset-0 bg-background/80 backdrop-blur-lg" aria-hidden="true" onClick={toggleMenu} />
           
           {/* Sidebar */}
           <div className="fixed top-0 right-0 h-full w-80 bg-gradient-to-b from-primary/95 to-primary/90 backdrop-blur-lg shadow-2xl transform transition-transform duration-300 ease-in-out">
@@ -72,7 +75,7 @@ export default function ResultsPage() {
               {/* Sidebar Header */}
               <div className="flex items-center justify-between p-6 border-b border-primary-foreground/20">
                 <div className="flex items-center gap-2">
-                  <Image src="/logo.png" alt="Voronova" width={32} height={32} className="h-8 w-8" />
+                  <Image src="/logo.png" alt="" aria-hidden="true" width={32} height={32} className="h-8 w-8" />
                   <span className="text-lg font-bold text-primary-foreground">VORONOVA</span>
                 </div>
                 <Button
@@ -80,8 +83,9 @@ export default function ResultsPage() {
                   size="icon"
                   className="text-primary-foreground hover:bg-primary-foreground/20"
                   onClick={toggleMenu}
+                  aria-label="Close menu"
                 >
-                  <X className="h-6 w-6" />
+                  <X className="h-6 w-6" aria-hidden="true" />
                 </Button>
               </div>
 
@@ -136,7 +140,7 @@ export default function ResultsPage() {
       )}
 
       {/* Main Content Area */}
-      <div className="flex-1 flex flex-col lg:flex-row overflow-hidden">
+      <div role="main" id="main-content" tabIndex={-1} className="flex-1 flex flex-col lg:flex-row overflow-hidden">
         {/* Left Sidebar - Tools & Suggestions */}
         <div className="w-full lg:w-80 border-r border-border/50 bg-card/30 backdrop-blur-sm flex flex-col">
           <div className="p-4 border-b border-border/50 bg-card/50">

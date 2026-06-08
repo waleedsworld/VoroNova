@@ -11,6 +11,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Card } from "@/components/ui/card"
 import { Send, Sparkles, Layers, Box, Maximize2, Settings, Save, Download, Share, Play, Pause, RotateCcw, Menu, X, ArrowRight, ArrowLeft, Check, Plus, Trash2, Loader2, BarChart3, MessageSquare, ArrowDown } from "lucide-react"
 import { createFloorPlan, editFloorPlan, type CreatePlanRequest, type EditPlanRequest } from "@/lib/api"
+import { useMobileMenu } from "@/lib/use-mobile-menu"
 
 // Types for the questionnaire system
 interface QuestionnaireData {
@@ -106,6 +107,18 @@ export default function AppPage() {
   const [isTabsExpanded, setIsTabsExpanded] = useState(false)
   const [retryAttempts, setRetryAttempts] = useState(0)
   const [isRetrying, setIsRetrying] = useState(false)
+
+  // Persist the mission config so the Design Analysis page (/analysis) can
+  // score the exact habitat the user configured here.
+  useEffect(() => {
+    if (typeof window === "undefined") return
+    if (generatedPlans.length === 0) return
+    try {
+      localStorage.setItem("voronova:lastMission", JSON.stringify(questionnaireData))
+    } catch {
+      /* storage unavailable — analysis page falls back to a sample config */
+    }
+  }, [generatedPlans, questionnaireData])
 
   // Auto-scroll to bottom of chat
   const scrollToBottom = () => {
@@ -1035,6 +1048,9 @@ export default function AppPage() {
     setIsMenuOpen(!isMenuOpen)
   }
 
+  // Lock background scroll and close on Escape while the mobile menu is open.
+  useMobileMenu(isMenuOpen, () => setIsMenuOpen(false))
+
   return (
     <div className="h-screen bg-background flex flex-col overflow-hidden">
       {/* Header Bar */}
@@ -1042,8 +1058,8 @@ export default function AppPage() {
         <div className="flex items-center justify-between">
           {/* Left side - Logo only */}
           <div className="flex items-center">
-            <Link href="/" className="flex items-center gap-2">
-              <Image src="/logo.png" alt="Voronova" width={40} height={40} className="h-8 w-8 sm:h-10 sm:w-10" />
+            <Link href="/" aria-label="VoroNova home" className="flex items-center gap-2">
+              <Image src="/logo.png" alt="" aria-hidden="true" width={40} height={40} className="h-8 w-8 sm:h-10 sm:w-10" />
             </Link>
           </div>
 
@@ -1056,19 +1072,24 @@ export default function AppPage() {
                 size="icon"
                 className="text-foreground hover:bg-primary/10 lg:hidden"
                 onClick={() => setShowMobileChat(!showMobileChat)}
+                aria-label={showMobileChat ? "Hide AI assistant chat" : "Show AI assistant chat"}
+                aria-pressed={showMobileChat}
               >
-                <MessageSquare className="h-6 w-6" />
+                <MessageSquare className="h-6 w-6" aria-hidden="true" />
               </Button>
             )}
-            
+
             {/* Menu Button */}
             <Button
               variant="ghost"
               size="icon"
               className="text-foreground hover:bg-primary/10"
               onClick={toggleMenu}
+              aria-label={isMenuOpen ? "Close menu" : "Open menu"}
+              aria-expanded={isMenuOpen}
+              aria-controls="app-menu"
             >
-              <Menu className="h-6 w-6" />
+              <Menu className="h-6 w-6" aria-hidden="true" />
             </Button>
           </div>
         </div>
@@ -1076,9 +1097,9 @@ export default function AppPage() {
 
       {/* Right Sidebar Menu */}
       {isMenuOpen && (
-        <div className="fixed inset-0 z-40">
+        <div id="app-menu" role="dialog" aria-modal="true" aria-label="Site menu" className="fixed inset-0 z-40">
           {/* Backdrop */}
-          <div className="fixed inset-0 bg-background/80 backdrop-blur-lg" onClick={toggleMenu} />
+          <div className="fixed inset-0 bg-background/80 backdrop-blur-lg" aria-hidden="true" onClick={toggleMenu} />
           
           {/* Sidebar */}
           <div className="fixed top-0 right-0 h-full w-80 bg-gradient-to-b from-primary/95 to-primary/90 backdrop-blur-lg shadow-2xl transform transition-transform duration-300 ease-in-out">
@@ -1086,7 +1107,7 @@ export default function AppPage() {
               {/* Sidebar Header */}
               <div className="flex items-center justify-between p-6 border-b border-primary-foreground/20">
                 <div className="flex items-center gap-2">
-                  <Image src="/logo.png" alt="Voronova" width={32} height={32} className="h-8 w-8" />
+                  <Image src="/logo.png" alt="" aria-hidden="true" width={32} height={32} className="h-8 w-8" />
                   <span className="text-lg font-bold text-primary-foreground">VORONOVA</span>
                 </div>
                 <Button
@@ -1094,8 +1115,9 @@ export default function AppPage() {
                   size="icon"
                   className="text-primary-foreground hover:bg-primary-foreground/20"
                   onClick={toggleMenu}
+                  aria-label="Close menu"
                 >
-                  <X className="h-6 w-6" />
+                  <X className="h-6 w-6" aria-hidden="true" />
                 </Button>
               </div>
 
@@ -1150,7 +1172,7 @@ export default function AppPage() {
       )}
 
       {/* Main Content Area */}
-      <div className="flex-1 flex flex-col lg:flex-row overflow-hidden">
+      <div role="main" id="main-content" tabIndex={-1} className="flex-1 flex flex-col lg:flex-row overflow-hidden">
         {/* Left Sidebar - AI Assistant */}
         <div className={`w-full lg:w-80 border-r border-border/50 bg-card/30 backdrop-blur-sm flex flex-col transition-transform duration-300 ${
           isMobile && !showMobileChat ? 'hidden lg:flex' : 'flex'
@@ -1398,16 +1420,18 @@ export default function AppPage() {
                 onChange={(e) => setInput(e.target.value)}
                 onKeyDown={(e) => e.key === "Enter" && handleSend()}
                 placeholder="Type and press Enter to see current options..."
+                aria-label="Message the AI assistant"
                 className="flex-1 bg-background/50 text-sm"
                 disabled={isGenerating}
               />
-              <Button 
-                onClick={handleSend} 
-                size="icon" 
+              <Button
+                onClick={handleSend}
+                size="icon"
                 className="bg-gradient-to-r from-primary to-orange-500 hover:from-primary/90 hover:to-orange-500/90"
                 disabled={isGenerating}
+                aria-label="Send message"
               >
-                <Send className="h-4 w-4" />
+                <Send className="h-4 w-4" aria-hidden="true" />
               </Button>
             </div>
           </div>
@@ -2016,7 +2040,7 @@ export default function AppPage() {
                         <Button
                           size="sm"
                           variant="outline"
-                          onClick={() => window.location.href = '/results'}
+                          onClick={() => window.location.href = '/analysis'}
                           className="w-full text-xs"
                         >
                           <BarChart3 className="h-3 w-3 mr-1" />
@@ -2171,6 +2195,7 @@ export default function AppPage() {
                 <textarea
                   value={editPrompt}
                   onChange={(e) => setEditPrompt(e.target.value)}
+                  aria-label="Prompt: describe the changes to the floor plan"
                   placeholder="Describe the changes you want to make to the floor plan..."
                   className="w-full p-2 border border-border bg-background text-foreground rounded-md focus:ring-2 focus:ring-primary focus:border-transparent h-24 resize-none"
                 />
