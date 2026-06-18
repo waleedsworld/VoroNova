@@ -11,7 +11,7 @@ export function Footer() {
           {/* Brand */}
           <div className="max-w-sm">
             <div className="flex items-center gap-2">
-              <Image src="/logo.png" alt="VoroNova" width={36} height={36} className="h-9 w-9" />
+              <Image src="/logo.png" alt="" aria-hidden="true" width={36} height={36} className="h-9 w-9" />
               <span className="text-xl font-bold tracking-tight text-foreground">VORONOVA</span>
             </div>
             <p className="mt-4 text-sm leading-relaxed text-muted-foreground">
@@ -30,6 +30,9 @@ export function Footer() {
                 </li>
                 <li>
                   <Link href="/app" className="transition-colors hover:text-foreground">Design Studio</Link>
+                </li>
+                <li>
+                  <Link href="/calculator" className="transition-colors hover:text-foreground">Volume Calculator</Link>
                 </li>
                 <li>
                   <Link href="/results" className="transition-colors hover:text-foreground">Results</Link>
