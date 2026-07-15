@@ -3,7 +3,10 @@ import type { Metadata, Viewport } from "next"
 import { GeistSans } from "geist/font/sans"
 import { GeistMono } from "geist/font/mono"
 import { Suspense } from "react"
+import { SkipLink } from "@/components/skip-link"
+import { StructuredData } from "@/components/structured-data"
 import "./globals.css"
+import "./robustness.css"
 
 export const metadata: Metadata = {
   metadataBase: new URL("https://voronova.waleeds.world"),
@@ -21,28 +24,48 @@ export const metadata: Metadata = {
     "space engineering tools",
     "VoroNova",
   ],
-  authors: [{ name: "Waleed Ajmal" }],
+  authors: [{ name: "Waleed Ajmal", url: "https://github.com/waleedsworld" }],
   creator: "Waleed Ajmal",
+  publisher: "Waleed Ajmal",
   applicationName: "VoroNova",
-  icons: {
-    icon: "/logo.png",
-    shortcut: "/logo.png",
-    apple: "/logo.png",
+  category: "technology",
+  alternates: {
+    canonical: "/",
+  },
+  manifest: "/manifest.webmanifest",
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      "max-image-preview": "large",
+      "max-snippet": -1,
+    },
   },
   openGraph: {
     type: "website",
+    url: "https://voronova.waleeds.world",
     title: "VoroNova — AI-Powered Space Habitat Design",
     description:
       "Design, visualize and optimize space habitats with AI trained on authentic NASA schematics.",
     siteName: "VoroNova",
-    images: [{ url: "/logo.png", width: 512, height: 512, alt: "VoroNova" }],
+    locale: "en_US",
+    images: [
+      {
+        url: "/og-image.png",
+        width: 1200,
+        height: 630,
+        alt: "VoroNova — AI-Powered Space Habitat Design Studio",
+      },
+    ],
   },
   twitter: {
     card: "summary_large_image",
     title: "VoroNova — AI-Powered Space Habitat Design",
     description:
       "Design, visualize and optimize space habitats with AI trained on authentic NASA schematics.",
-    images: ["/logo.png"],
+    images: ["/og-image.png"],
   },
 }
 
@@ -60,6 +83,8 @@ export default function RootLayout({
   return (
     <html lang="en" className="scroll-smooth">
       <body className={`font-sans ${GeistSans.variable} ${GeistMono.variable} antialiased`}>
+        <SkipLink />
+        <StructuredData />
         <Suspense fallback={null}>{children}</Suspense>
       </body>
     </html>

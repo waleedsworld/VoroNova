@@ -19,7 +19,9 @@
 ---
 
 <div align="center">
-  <img src="./docs/media/home.png" alt="VoroNova landing page" width="90%" />
+  <img src="./docs/media/demo.gif" alt="VoroNova in action — landing, volume calculator, readiness analysis and the design studio" width="90%" />
+  <br/>
+  <em>From "think beyond Earth" to a scored, flight-ready concept — in one uninterrupted flight path.</em>
 </div>
 
 ---
@@ -44,19 +46,44 @@ looked up and thought *"I could design that."*
 
 ## The tour ✨
 
-| Landing | Design Studio | Analysis & Results |
+| Landing | Design Studio | AI Assistant Results |
 |:---:|:---:|:---:|
 | ![Home](./docs/media/home.png) | ![Studio](./docs/media/studio.png) | ![Results](./docs/media/results.png) |
 
+| Habitat Volume Calculator | Habitat Readiness Analysis |
+|:---:|:---:|
+| ![Calculator](./docs/media/calculator.png) | ![Analysis](./docs/media/analysis.png) |
+
 <div align="center">
-  <img src="./docs/media/home-mobile.png" alt="Mobile landing" width="30%" />
+  <img src="./docs/media/home-mobile.png" alt="Mobile landing" width="26%" />
   &nbsp;&nbsp;
-  <img src="./docs/media/studio-mobile.png" alt="Mobile studio" width="30%" />
+  <img src="./docs/media/calculator-mobile.png" alt="Mobile calculator" width="26%" />
+  &nbsp;&nbsp;
+  <img src="./docs/media/studio-mobile.png" alt="Mobile studio" width="26%" />
   <br/>
   <em>Fully responsive — mission control fits in your pocket.</em>
 </div>
 
 ---
+
+## Fresh off the launchpad 🆕
+
+The latest iteration adds two standalone mission-planning tools and a big polish + reliability pass:
+
+- **🧮 Habitat Volume Calculator** (`/calculator`) — a NASA-grounded sizing tool. Dial in crew size,
+  mission duration, destination and launch vehicle, and watch the *net habitable volume*, per-crew
+  wellbeing tiers (tolerable → performance → optimal), fairing fit, and function-by-function breakdown
+  update **live**. Know how big your habitat needs to be *before* you draw a single wall.
+- **🚀 Habitat Readiness Analysis** (`/analysis`) — score any concept against NASA habitability heuristics
+  and get a letter grade (that A+ isn't going to earn itself), a radar chart across Volume, Zoning, Life
+  Support, Launch Feasibility and Crew Wellbeing, plus prioritized recommendations. Export to JSON or print.
+- **🎛️ A/B landing experience** — a second hero variant lives behind `?variant=b` (flip it with the
+  toggle in the corner) so design directions can be tested, not just argued about.
+- **♿ Accessibility + performance** — skip links, ARIA landmarks and labels, keyboard-navigable dialogs,
+  `prefers-reduced-motion` support, and a 97%-smaller logo. Mission control for *everyone*.
+- **📱 Touch & mobile hardening** — scroll-locking mobile menu, safer touch targets, and layout fixes
+  across the app.
+- **🧪 Test suite + CI** — unit tests (Vitest) and end-to-end smoke tests (Playwright) wired into GitHub Actions.
 
 ## What it does 🚀
 
@@ -68,8 +95,9 @@ looked up and thought *"I could design that."*
 - **Design analysis** — automatic scoring for efficiency, safety, and cost, plus actionable
   "Optimize solar array" / "Expand living quarters" suggestions.
 - **Export & compare** — download your designs and put alternatives side by side.
-- **Space-grade UI** — animated star fields, orbit systems, and a dark theme pulled straight from the
-  VoroNova logo palette. Respects `prefers-reduced-motion`, because not everyone wants the cosmos spinning.
+- **Space-grade UI** — animated star fields, orbit systems, scroll progress, reveal-on-scroll sections
+  and a dark theme pulled straight from the VoroNova logo palette. Respects `prefers-reduced-motion`,
+  because not everyone wants the cosmos spinning.
 
 ---
 
@@ -116,10 +144,21 @@ npm install
 npm run dev
 ```
 
-Open **http://localhost:3000** and you're flying. To build the production static export instead:
+Open **http://localhost:3000** and you're flying. Want to sanity-check the flight instruments? Try
+[localhost:3000/calculator](http://localhost:3000/calculator) and
+[localhost:3000/analysis](http://localhost:3000/analysis). Curious about the other hero? Append
+`?variant=b`. To build the production static export instead:
 
 ```bash
 npm run build      # outputs to FrontEnd/dist/
+```
+
+### Run the tests 🧪
+
+```bash
+cd FrontEnd
+npm run test:unit    # Vitest unit tests
+npm run test:e2e     # Playwright smoke tests (installs browsers on first run)
 ```
 
 ### 3. Launch the backend (ground station)
