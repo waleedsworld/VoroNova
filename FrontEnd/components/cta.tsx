@@ -1,3 +1,4 @@
+import Link from "next/link"
 import { Button } from "@/components/ui/button"
 import { ArrowRight } from "lucide-react"
 
@@ -14,12 +15,14 @@ export function CTA() {
               Join learners, dreamers, and experts experimenting with next-generation space habitats.
             </p>
             <div className="flex flex-col gap-4 sm:flex-row sm:justify-center">
-              <Button size="lg" className="bg-gradient-to-r from-primary to-orange-500 text-primary-foreground hover:from-primary/90 hover:to-orange-500/90 group shadow-xl">
-                Start Free Trial
-                <ArrowRight className="ml-2 h-4 w-4 transition-transform group-hover:translate-x-1" />
+              <Button asChild size="lg" className="bg-gradient-to-r from-primary to-orange-500 text-primary-foreground hover:from-primary/90 hover:to-orange-500/90 group shadow-xl">
+                <Link href="/app">
+                  Launch the Design Studio
+                  <ArrowRight className="ml-2 h-4 w-4 transition-transform group-hover:translate-x-1" />
+                </Link>
               </Button>
-              <Button size="lg" variant="outline" className="border-primary/50 bg-card/50 backdrop-blur-sm hover:bg-primary/10">
-                Schedule Demo
+              <Button asChild size="lg" variant="outline" className="border-primary/50 bg-card/50 backdrop-blur-sm hover:bg-primary/10">
+                <Link href="/results">See Example Results</Link>
               </Button>
             </div>
           </div>

@@ -276,3 +276,23 @@
   animation: color-load 0.4s ease-out forwards;
   color: oklch(0.65 0.02 250); /* Start with muted color */
 }
+
+/* Accessibility: honor the user's reduced-motion preference.
+   Space is beautiful, but not everyone wants it spinning. */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* Nicer focus rings for keyboard navigators */
+:focus-visible {
+  outline: 2px solid var(--ring);
+  outline-offset: 2px;
+  border-radius: 4px;
+}
