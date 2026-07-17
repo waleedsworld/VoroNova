@@ -4,6 +4,7 @@ import { Hero } from "@/components/hero"
 import { Features } from "@/components/features"
 import { HowItWorks } from "@/components/how-it-works"
 import { CTA } from "@/components/cta"
+import { Footer } from "@/components/footer"
 import { Navigation } from "@/components/navigation"
 import { StarField } from "@/components/star-field"
 import { LoadingScreen } from "@/components/loading-screen"
@@ -33,6 +34,7 @@ export default function Home() {
       <Features />
       <HowItWorks />
       <CTA />
+      <Footer />
     </main>
   )
 }
